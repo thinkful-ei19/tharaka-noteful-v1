@@ -12,11 +12,17 @@ const store = (function(){
     });
   };
 
+  const findAndDelete = function(id) {
+    // store.notes = store.notes.filter(item => item.id !== id);
+    store.notes.splice(id-1000, 1);
+  };
+
   return {
     notes: [],
     currentNote: false,
     currentSearchTerm: '',
-    updateNote: updateNote
+    updateNote: updateNote,
+    findAndDelete
   };
   
 }());
