@@ -2,7 +2,9 @@
 
 const { PORT } = require('./config');
 const express = require('express');
+const logger = require('./middleware/logger');
 
+// const path = require('path');
 // TEMP: Simple In-Memory Database
 const data = require('./db/notes');
 const simDB = require('./db/simDB');
@@ -14,18 +16,23 @@ console.log('hello world!');
 const app = express();
 
 
-function requestLogger(req, res, next) {
-  const now = new Date();
-  console.log(
-    `${now.toLocaleDateString()} ${now.toLocaleTimeString()} ${req.method} ${req.url}`);
-  next();
-}
+// function requestLogger(req, res, next) {
+//   const now = new Date();
+//   console.log(
+//     `${now.toLocaleDateString()} ${now.toLocaleTimeString()} ${req.method} ${req.url}`);
+//   next();
+// }
 
-app.use(requestLogger);
+app.use(logger);
 
 app.use(express.static('public'));
+
 app.use(express.json());
 
+// app.get('/', (req, res) => {//How to serve any file
+//   console.log('serving index file');
+//   res.sendFile(path.join(`${__dirname}/index.html`));
+// });
 
 app.get('/api/notes', (req, res, next) => {
   const { searchTerm } = req.query;
