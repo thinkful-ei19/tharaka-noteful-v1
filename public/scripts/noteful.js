@@ -143,9 +143,10 @@ const noteful = (function () {
     $('.js-notes-list').on('click', '.js-note-delete-button', event => {
       event.preventDefault();
       const id = $(event.currentTarget).closest('li').attr('data-id');
+
       api.delete(id, function() {
         store.findAndDelete(id);
-        console.log(store.notes);
+      
         render();
       });
       
@@ -155,7 +156,6 @@ const noteful = (function () {
   function bindEventListeners() {
     handleNoteItemClick();
     handleNoteSearchSubmit();
-    
     handleNoteFormSubmit();
     handleNoteStartNewSubmit();
     handleNoteDeleteClick();

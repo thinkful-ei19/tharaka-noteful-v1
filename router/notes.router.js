@@ -33,6 +33,7 @@ router.get('/notes/:id', (req, res, next) => {
       return next(err); // goes to error handler
     }
     if (item) {
+
       res.json(item);
     } else {
       next();//go to 404 error func
@@ -71,12 +72,11 @@ router.put('/notes/:id', (req, res, next) => {
 
 // Post (insert) an item
 router.post('/notes', (req, res, next) => {
-//   console.log('hello from router');
-  console.log(req.body);
+
   const { title, content } = req.body;
-  console.log('title', title);
+
   const newItem = { title, content };
-  //console.log(newItem);
+
   /***** Never trust users - validate input *****/
   if (!newItem.title) {
     const err = new Error('Missing `title` in request body');
@@ -104,8 +104,14 @@ router.delete('/notes/:id', (req, res, next) => {
       return next(err); // goes to error handler
     }
     if (item) {
-        
-      res.json(item);
+      console.log(notes.data.length);
+      notes.delete(id, (err, len)=>{
+        if(err) {
+          return next(err);
+        }
+        res.json(item);
+      });       
+      //res.json(item);
     } else {
       next();//go to 404 error func
     }   

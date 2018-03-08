@@ -16,11 +16,11 @@ const notesRouter = require('./router/notes.router');
 
 
 //app.use(logger);
+app.use(morgan('dev'));
+
 app.use(express.static('public'));
 
 app.use(express.json());
-
-app.use(morgan('dev'));
 
 app.use('/v1', notesRouter);
 
