@@ -2,59 +2,83 @@
 'use strict';
 
 const api = {
-  
-  search: function (query, callback) {
-    $.ajax({
+
+
+  search: function (query) {//Promise
+    return $.ajax({
       type: 'GET',
       url: '/v1/notes/',
       dataType: 'json',
-      data: query,
-      success: callback
-    });
-  },
-  
-  details: function (id, callback) {
-    $.ajax({
-      type: 'GET',
-      dataType: 'json',
-      url: `/v1/notes/${id}`,
-      success: callback
+      data: query
     });
   },
 
-  update: function(id, obj, callback) {
-    $.ajax({
+  details: function (id) {//Promise
+    return $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: `/v1/notes/${id}`
+    });
+  },
+
+
+  update: function(id, obj) {//Promise
+    return $.ajax({
       type: 'PUT',
       url: `/v1/notes/${id}`,
       contentType: 'application/json',
       dataType: 'json',
-      data: JSON.stringify(obj),
-      success: callback
+      data: JSON.stringify(obj)
     });
   },
 
-  create: function (obj, callback) {
-    $.ajax({
+
+  create: function (obj) {//Promise
+    return $.ajax({
       type: 'POST',
       url: '/v1/notes',
       contentType: 'application/json',
       dataType: 'json',
       processData: false,
-      data: JSON.stringify(obj),
-      success: callback
+      data: JSON.stringify(obj)
     });
   },
 
 
-  delete: function (id, callback) {
-    $.ajax({
+  delete: function (id) {//Promise
+    return $.ajax({
       type: 'DElETE',
       url: `/v1/notes/${id}`,
       contentType: 'application/json',
       dataType: 'json',
-      processData: false,
-      success: callback
+      processData: false
     });
   }
+
+//Test
+  // api.search(1005)
+  // .then(response => {
+  //   console.log(response)
+  // });
+
+  // api.details(1005)
+  // .then(response => {
+  //   console.log(response)
+  // });
+
+  // api.update(1005)
+  // .then(response => {
+  //   console.log(response)
+  // }); 
+
+  // api.create(1005)
+  // .then(response => {
+  //   console.log(response)
+  // });
+
+  // api.delete(1005)
+  // .then(response => {
+  //   console.log(response)
+  // });
 
 }; 

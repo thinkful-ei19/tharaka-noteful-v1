@@ -12,13 +12,15 @@ const notes = simDB.initialize(data);
 router.get('/notes', (req, res, next) => {
   const { searchTerm } = req.query;
   
-  notes.filter(searchTerm, (err, list) => {
-    if (err) {
+
+  notes.filter(searchTerm)//Promise
+    .then(list => {
+      if(list.length <= 0) next('Not found');
+      res.json(list); // responds with filtered array
+    })
+    .catch(err => {
       return next(err); // goes to error handler
-    }
-    if(list.length <= 0) next('Not found');
-    res.json(list); // responds with filtered array
-  });
+    });
 });
 
 
@@ -28,17 +30,20 @@ router.get('/notes', (req, res, next) => {
 router.get('/notes/:id', (req, res, next) => {
   //const id = req.params.id;
   const { id } = req.params;
-  notes.find(id, (err, item) => {
-    if (err) {
-      return next(err); // goes to error handler
-    }
-    if (item) {
 
-      res.json(item);
-    } else {
-      next();//go to 404 error func
-    }   
-  });
+
+  notes.find(id)//Promise
+    .then(item => {
+      if (item) {
+
+        res.json(item);
+      } else {
+        next();//go to 404 error func
+      }   
+    })
+    .catch(err => {
+      next();//goes to error handler
+    });
 }); 
 
 
@@ -57,16 +62,18 @@ router.put('/notes/:id', (req, res, next) => {
     }
   });
   
-  notes.update(id, updateObj, (err, item) => {
-    if (err) {
+  
+  notes.update(id, updateObj)//Promise
+    .then(item => {
+      if (item) {
+        res.json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => {
       return next(err);
-    }
-    if (item) {
-      res.json(item);
-    } else {
-      next();
-    }
-  });
+    });
 });
 
 
@@ -83,39 +90,44 @@ router.post('/notes', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  
-  notes.create(newItem, (err, item) => {
-    if (err) {
+
+
+  notes.create(newItem)//Promise
+    .then(item => {
+      if (item) {
+        res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
+      } else {
+        next();
+      }
+    })
+    .catch(err => {
       return next(err);
-    }
-    if (item) {
-      res.location(`http://${req.headers.host}/notes/${item.id}`).status(201).json(item);
-    } else {
-      next();
-    }
-  });
+    });
 });
 
 router.delete('/notes/:id', (req, res, next) => {
   //const id = req.params.id;
   const { id } = req.params;
-  notes.find(id, (err, item) => {
-    if (err) {
-      return next(err); // goes to error handler
-    }
-    if (item) {
-      console.log(notes.data.length);
-      notes.delete(id, (err, len)=>{
-        if(err) {
-          return next(err);
-        }
-        res.json(item);
-      });       
+
+
+  notes.find(id)//Promise
+    .then(item => {
+      if (item) {
+        console.log(notes.data.length);
+        notes.delete(id, (err, len)=>{
+          if(err) {
+            return next(err);
+          }
+          res.json(item);
+        });       
       //res.json(item);
-    } else {
-      next();//go to 404 error func
-    }   
-  });
+      } else {
+        next();//go to 404 error func
+      }   
+    })
+    .catch(err => {
+      return next(err); // goes to error handler
+    });
 }); 
   
    

@@ -42,10 +42,11 @@ const noteful = (function () {
 
       const noteId = getNoteIdFromElement(event.currentTarget);
 
-      api.details(noteId, detailsResponse => {
-        store.currentNote = detailsResponse;
-        render();
-      });
+      api.details(noteId)//Promise
+        .then(detailsResponse => {
+          store.currentNote = detailsResponse;
+          render();
+        });
 
     });
   }
@@ -57,10 +58,11 @@ const noteful = (function () {
       const searchTerm = $('.js-note-search-entry').val();
       store.currentSearchTerm = searchTerm ? { searchTerm } : {};
 
-      api.search(store.currentSearchTerm, searchResponse => {
-        store.notes = searchResponse;
-        render();
-      });
+      api.search(store.currentSearchTerm)//Promise
+        .then(searchResponse => {
+          store.notes = searchResponse;
+          render();
+        });
 
     });
   }
@@ -101,28 +103,38 @@ const noteful = (function () {
       };
   
       if (store.currentNote.id) {
-  
-        api.update(store.currentNote.id, noteObj, updateResponse => {
-          store.currentNote = updateResponse;
-  
-          api.search(store.currentSearchTerm, updateResponse => {
+
+
+        api.update(store.currentNote.id, noteObj)//Promise
+          .then(updateResponse => {
+            store.currentNote = updateResponse;
+          });
+          
+        api.search(store.currentSearchTerm)
+          .then(updateResponse => {
             store.notes = updateResponse;
             render();
+
           });
   
-        });
+       
   
       } else {
   
-        api.create(noteObj, updateResponse => {
-          store.currentNote = updateResponse;
+
+        api.create(noteObj)//Promise
+          .then(updateResponse => {
+            store.currentNote = updateResponse;
+        
+          });
   
-          api.search(store.currentSearchTerm, updateResponse => {
+        api.search(store.currentSearchTerm)
+          .then(updateResponse => {
             store.notes = updateResponse;
             render();
           });
   
-        });
+        
       }
   
     });
@@ -144,12 +156,14 @@ const noteful = (function () {
       event.preventDefault();
       const id = $(event.currentTarget).closest('li').attr('data-id');
 
-      api.delete(id, function() {
-        store.findAndDelete(id);
       
-        render();
-      });
+      api.delete(id)//Promise
+        .then(function() {
+          store.findAndDelete(id);
       
+          render();
+        });
+
     });
   }
 
