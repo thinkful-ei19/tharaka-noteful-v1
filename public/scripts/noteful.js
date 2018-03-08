@@ -37,10 +37,10 @@ const noteful = (function () {
    * EVENT LISTENERS AND HANDLERS
    */
 
-  function searchApiCreate() {
+  function searchApiCreate(currentSearch) {
     console.log('no DRY search');
 
-    api.search(store.currentSearchTerm)
+    api.search(currentSearch)
       .then(updateResponse => {
         store.notes = updateResponse;
         render();
@@ -70,7 +70,7 @@ const noteful = (function () {
       const searchTerm = $('.js-note-search-entry').val();
       store.currentSearchTerm = searchTerm ? { searchTerm } : {};
 
-      searchApiCreate();
+      searchApiCreate(store.currentSearchTerm);
 
     });
   }
@@ -119,7 +119,7 @@ const noteful = (function () {
             store.currentNote = updateResponse;
           });
         
-        searchApiCreate();
+        searchApiCreate(store.currentSearchTerm);
   
        
   
@@ -132,7 +132,7 @@ const noteful = (function () {
         
           });
   
-        searchApiCreate();
+        searchApiCreate(store.currentSearchTerm);
         
       }
   
@@ -178,6 +178,7 @@ const noteful = (function () {
   return {
     render: render,
     bindEventListeners: bindEventListeners,
+    searchApiCreate
   };
 
 }());
