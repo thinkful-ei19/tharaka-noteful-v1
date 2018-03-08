@@ -36,6 +36,18 @@ const noteful = (function () {
   /**
    * EVENT LISTENERS AND HANDLERS
    */
+
+  function searchApiCreate() {
+    console.log('no DRY search');
+
+    api.search(store.currentSearchTerm)
+      .then(updateResponse => {
+        store.notes = updateResponse;
+        render();
+      });
+      
+  }
+
   function handleNoteItemClick() {
     $('.js-notes-list').on('click', '.js-note-show-link', event => {
       event.preventDefault();
@@ -58,11 +70,7 @@ const noteful = (function () {
       const searchTerm = $('.js-note-search-entry').val();
       store.currentSearchTerm = searchTerm ? { searchTerm } : {};
 
-      api.search(store.currentSearchTerm)//Promise
-        .then(searchResponse => {
-          store.notes = searchResponse;
-          render();
-        });
+      searchApiCreate();
 
     });
   }
@@ -90,6 +98,7 @@ const noteful = (function () {
   //   });
   // }
 
+
   function handleNoteFormSubmit() {
     $('.js-note-edit-form').on('submit', function (event) {
       event.preventDefault();
@@ -109,13 +118,8 @@ const noteful = (function () {
           .then(updateResponse => {
             store.currentNote = updateResponse;
           });
-          
-        api.search(store.currentSearchTerm)
-          .then(updateResponse => {
-            store.notes = updateResponse;
-            render();
-
-          });
+        
+        searchApiCreate();
   
        
   
@@ -128,12 +132,7 @@ const noteful = (function () {
         
           });
   
-        api.search(store.currentSearchTerm)
-          .then(updateResponse => {
-            store.notes = updateResponse;
-            render();
-          });
-  
+        searchApiCreate();
         
       }
   
