@@ -15,10 +15,13 @@ router.get('/notes', (req, res, next) => {
 
   notes.filter(searchTerm)//Promise
     .then(list => {
+      //console.log(list);
+      console.log('inside then block');
       if(list.length <= 0) next('Not found');
       res.json(list); // responds with filtered array
     })
     .catch(err => {
+      console.log('err');
       return next(err); // goes to error handler
     });
 });
