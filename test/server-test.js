@@ -139,7 +139,7 @@ describe('http request', function () {
           .delete(`/v1/notes/${res.body[0].id}`);
       })
       .then(function(res) {
-        expect(res).to.have.status(200);
+        expect(res).to.have.status(200);//should be 204
 
       });
   });
